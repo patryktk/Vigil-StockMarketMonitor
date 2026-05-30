@@ -1,0 +1,30 @@
+# Maven output — Stage 1 sam buduje, nie potrzebuje twoich lokalnych targetów
+**/target/
+
+# IDE
+.idea/
+**/*.iml
+
+# Git
+.git/
+.gitignore
+
+# Dokumentacja i inne
+*.md
+docs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logi
+**/*.log
+logs/
+
+# Env — nigdy nie wysyłaj sekretów do build context
+.env
+*.env.local
+
+# Inne Dockerfile — nie są potrzebne podczas budowania
+**/Dockerfile
+docker-compose*.yml

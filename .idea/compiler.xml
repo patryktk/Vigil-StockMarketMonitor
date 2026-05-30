@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="api-service" />
+        <module name="processor-service" />
+        <module name="common" />
+        <module name="scraper-service" />
+        <module name="sheets-service" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Vigil - Stock Market Monitor" target="1.5" />
+      <module name="vigil-bom" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="api-service" options="" />
+      <module name="common" options="" />
+      <module name="processor-service" options="" />
+      <module name="scraper-service" options="" />
+      <module name="sheets-service" options="" />
+    </option>
+  </component>
+</project>

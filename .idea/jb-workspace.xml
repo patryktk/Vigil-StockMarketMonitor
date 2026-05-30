@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WorkspaceSettings">
+    <project name="scraper-service" path="$PROJECT_DIR$/scraper-service" />
+    <project name="common" path="$PROJECT_DIR$/common" />
+    <project name="processor-service" path="$PROJECT_DIR$/processor-service" />
+    <project name="sheets-service" path="$PROJECT_DIR$/sheets-service" />
+    <project name="api-service" path="$PROJECT_DIR$/api-service" />
+    <project name="Unknown" path="$PROJECT_DIR$">
+      <vcs id="Git" remoteUrl="https://github.com/patryktk/Vigil-StockMarketMonitor.git" />
+    </project>
+    <option name="workspace" value="true" />
+  </component>
+</project>

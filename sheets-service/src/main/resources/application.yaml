@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: sheets-service
+server:
+  port: 8040
