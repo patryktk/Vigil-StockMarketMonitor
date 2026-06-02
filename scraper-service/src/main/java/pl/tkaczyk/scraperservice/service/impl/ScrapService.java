@@ -1,43 +1,55 @@
 package pl.tkaczyk.scraperservice.service.impl;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.tkaczyk.scraperservice.exception.CompanyNotFound;
+import pl.tkaczyk.scraperservice.mapper.DividendAnnouncementMapper;
 import pl.tkaczyk.scraperservice.mapper.StockMapper;
-import pl.tkaczyk.scraperservice.model.Company;
 import pl.tkaczyk.scraperservice.model.StockSnapshot;
+import pl.tkaczyk.scraperservice.model.dto.BiznesRadarDocuments;
 import pl.tkaczyk.scraperservice.model.dto.StockSnapshotDto;
-import pl.tkaczyk.scraperservice.repository.CompanyRepository;
+import pl.tkaczyk.scraperservice.repository.DividendAnnouncementRepository;
 import pl.tkaczyk.scraperservice.repository.StockSnapshotRepository;
 
-import java.util.Map;
-
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ScrapService {
 
-    private BiznesRadarClient biznesRadarClient;
-    private BiznesRadarParser biznesRadarParser;
-    private StockSnapshotRepository stockSnapshotRepository;
-    private CompanyRepository companyRepository;
-    private StockMapper mapper;
+    private final BiznesRadarClient biznesRadarClient;
+    private final BiznesRadarParser biznesRadarParser;
+    private final StockSnapshotRepository stockSnapshotRepository;
+    private final StockMapper mapper;
+    private final StrefaInwestorowDividendService strefaInwestorowDividendService;
+    private final DividendAnnouncementMapper dividendAnnouncementMapper;
+    private final DividendAnnouncementRepository dividendAnnouncementRepository;
+
+    private final StrefaInwestorowClient strefaInwestorowClient;
+    private final StrefaInwestorowParser strefaInwestorowParser;
 
     @Transactional
     public void scrape(String ticker) {
+        scrapeStockSnapshot(ticker);
+        scrapeDividendAnnouncement(ticker);
+    }
 
-        Map<String, Document> stringDocumentMap = biznesRadarClient.makeSnapshot(ticker);
+    private void scrapeStockSnapshot(String ticker) {
+        BiznesRadarDocuments biznesRadarDocuments = biznesRadarClient.makeSnapshot(ticker).orElseThrow(() -> new RuntimeException("Could not fetch data from BiznesRadar"));
 
-        StockSnapshotDto stockSnapshotDto = biznesRadarParser.parseStockData(stringDocumentMap);
+        StockSnapshotDto stockSnapshotDto = biznesRadarParser.parseStockData(biznesRadarDocuments);
+        StockSnapshot entity = mapper.toEntity(stockSnapshotDto);
 
-        Company company = companyRepository.findCompanyByTicker(ticker)
-                .orElseThrow(() -> new CompanyNotFound("Company not found"));
-
-        StockSnapshot entity = mapper.toEntity(stockSnapshotDto, company);
         stockSnapshotRepository.save(entity);
+    }
 
+    private void scrapeDividendAnnouncement(String ticker) {
+        Document elements = strefaInwestorowClient.makeSnapshot(ticker);
+
+        strefaInwestorowParser.parseStock(elements);
+
+        strefaInwestorowDividendService.makeSnapshot(ticker)
+                .map(dividendAnnouncementMapper::toEntity)
+                .ifPresent(dividendAnnouncementRepository::save);
     }
 
 

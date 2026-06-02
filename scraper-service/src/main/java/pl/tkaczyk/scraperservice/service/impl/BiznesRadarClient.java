@@ -1,21 +1,22 @@
 package pl.tkaczyk.scraperservice.service.impl;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
+import pl.tkaczyk.scraperservice.model.dto.BiznesRadarDocuments;
 import pl.tkaczyk.scraperservice.service.HtmlDocumentFetcher;
+import pl.tkaczyk.scraperservice.service.SnapshotProvider;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 
 @Service
-@AllArgsConstructor
-public class BiznesRadarClient {
+@RequiredArgsConstructor
+public class BiznesRadarClient implements SnapshotProvider<BiznesRadarDocuments> {
 
-    private HtmlDocumentFetcher fetcher;
+    private final HtmlDocumentFetcher fetcher;
 
-    public Map<String, Document> makeSnapshot(String ticker) {
+    @Override
+    public Optional<BiznesRadarDocuments> makeSnapshot(String ticker) {
 
         Document financialData = fetcher.getDocument("https://www.biznesradar.pl/wskazniki-wartosci-rynkowej/" + ticker);
         Document rentData = fetcher.getDocument("https://www.biznesradar.pl/wskazniki-rentownosci/" + ticker);
@@ -27,16 +28,16 @@ public class BiznesRadarClient {
         Document raportFlow = fetcher.getDocument(
                 "https://www.biznesradar.pl/raporty-finansowe-przeplywy-pieniezne/" + ticker + ",Q");
 
-        Map<String, Document> mapa = new HashMap<>();
-        mapa.put("financialData", financialData);
-        mapa.put("rentData", rentData);
-        mapa.put("debtData", debtData);
-        mapa.put("flowData", flowData);
-        mapa.put("bilansData", bilansData);
-        mapa.put("raportBiznes", raportBiznes);
-        mapa.put("raportFlow", raportFlow);
 
-        return mapa;
+        return Optional.ofNullable(BiznesRadarDocuments.builder()
+                .financialData(financialData)
+                .rentData(rentData)
+                .debtData(debtData)
+                .flowData(flowData)
+                .bilansData(bilansData)
+                .raportBiznes(raportBiznes)
+                .raportFlow(raportFlow)
+                .build());
     }
 
 }

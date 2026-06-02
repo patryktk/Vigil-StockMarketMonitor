@@ -12,9 +12,8 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: validate
-  flyway:
-    enabled: true
+      ddl-auto: none
+    depends-on: flyway
 
 
 resilience4j:
@@ -48,3 +47,7 @@ resilience4j:
           seconds: 30
         minimum-number-of-calls: 10 #CB starts raiting after 10 calls
     circuit-breaker-aspect-order: 3
+
+logging:
+  level:
+    org.flywaydb: DEBUG

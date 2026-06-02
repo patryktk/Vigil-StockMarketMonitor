@@ -6,12 +6,12 @@ import pl.tkaczyk.scraperservice.model.Company;
 import pl.tkaczyk.scraperservice.model.StockSnapshot;
 import pl.tkaczyk.scraperservice.model.dto.StockSnapshotDto;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface StockMapper {
 
 
 //    @Mapping(target = "id", ignore = true)
 //    @Mapping(target = "company", source = "company")
-    StockSnapshot toEntity(StockSnapshotDto dto, Company company);
+    StockSnapshot toEntity(StockSnapshotDto dto);
 
 }

@@ -56,12 +56,12 @@ public class StockSnapshot extends BaseEntity {
     // =========================
     // Profitability (rentowność)
     // =========================
-    private BigDecimal returnOnEquity; // ROE
-    private BigDecimal returnOnAssets;  // ROA
+    private BigDecimal returnOnEquity_pct; // ROE
+    private BigDecimal returnOnAssets_pct;  // ROA
 
-    private BigDecimal operatingMargin;
-    private BigDecimal netProfitMargin;
-    private BigDecimal salesMargin;
+    private BigDecimal operatingMargin_pct;
+    private BigDecimal netProfitMargin_pct;
+    private BigDecimal salesMargin_pct;
 
     // =========================
     // Liquidity (płynność)

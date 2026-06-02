@@ -4,40 +4,40 @@ import lombok.RequiredArgsConstructor;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Service;
+import pl.tkaczyk.scraperservice.model.dto.BiznesRadarDocuments;
 import pl.tkaczyk.scraperservice.model.dto.StockSnapshotDto;
 
 import java.math.BigDecimal;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class BiznesRadarParser {
 
     public StockSnapshotDto parseStockData(
-            Map<String, Document> stringDocumentMap
+            BiznesRadarDocuments biznesRadarDocuments
     ) {
         StockSnapshotDto stockSnapshotDto = new StockSnapshotDto();
 
-        Document financialData = stringDocumentMap.get("financialData");
+        Document financialData = biznesRadarDocuments.financialData();
         parseFinancialData(financialData, stockSnapshotDto);
 
-        Document rentData = stringDocumentMap.get("rentData");
+        Document rentData = biznesRadarDocuments.rentData();
         parseRentData(rentData, stockSnapshotDto);
 
-        Document debtData = stringDocumentMap.get("debtData");
+        Document debtData = biznesRadarDocuments.debtData();
         parseDebtData(debtData, stockSnapshotDto);
 
-        Document flowData = stringDocumentMap.get("flowData");
+        Document flowData = biznesRadarDocuments.flowData();
         parseFlowData(flowData, stockSnapshotDto);
 
-        Document bilansData = stringDocumentMap.get("bilansData");
+        Document bilansData = biznesRadarDocuments.bilansData();
         parseBilansData(bilansData, stockSnapshotDto);
 
-        Document raportBiznes = stringDocumentMap.get("raportBiznes");
+        Document raportBiznes = biznesRadarDocuments.raportBiznes();
         parseRaportBiznes(raportBiznes, stockSnapshotDto);
 
 
-        Document raportFlow = stringDocumentMap.get("raportFlow");
+        Document raportFlow = biznesRadarDocuments.raportFlow();
         parseRaportFlow(raportFlow, stockSnapshotDto);
 
         return stockSnapshotDto;
@@ -117,26 +117,26 @@ public class BiznesRadarParser {
     private void parseRentData(Document rentData, StockSnapshotDto stockSnapshotDto) {
         Element roeElement = rentData.selectFirst("tr[data-field=ROE] td.h.newest .value .pv span");
         BigDecimal returnOnEquity = getBigDecimal(roeElement);
-        stockSnapshotDto.setReturnOnEquity(returnOnEquity);
+        stockSnapshotDto.setReturnOnEquity_pct(returnOnEquity);
 
         Element roaElement = rentData.selectFirst("tr[data-field=ROA] td.h.newest .value .pv span");
         BigDecimal returnOnAssets = getBigDecimal(roaElement);
-        stockSnapshotDto.setReturnOnAssets(returnOnAssets);
+        stockSnapshotDto.setReturnOnAssets_pct(returnOnAssets);
 
 
         Element operatingMarginElement = rentData.selectFirst("tr[data-field=OPM] td.h.newest .value .pv span");
         BigDecimal operatingMargin = getBigDecimal(operatingMarginElement);
-        stockSnapshotDto.setOperatingMargin(operatingMargin);
+        stockSnapshotDto.setOperatingMargin_pct(operatingMargin);
 
 
         Element netProfitMarginElement = rentData.selectFirst("tr[data-field=ROS] td.h.newest .value .pv span");
         BigDecimal netProfitMargin = getBigDecimal(netProfitMarginElement);
-        stockSnapshotDto.setNetProfitMargin(netProfitMargin);
+        stockSnapshotDto.setNetProfitMargin_pct(netProfitMargin);
 
 
         Element salesMarginElement = rentData.selectFirst("tr[data-field=RS] td.h.newest .value .pv span");
         BigDecimal salesMargin = getBigDecimal(salesMarginElement);
-        stockSnapshotDto.setSalesMargin(salesMargin);
+        stockSnapshotDto.setSalesMargin_pct(salesMargin);
     }
 
     private void parseFinancialData(Document financialData, StockSnapshotDto stockSnapshotDto) {
@@ -189,6 +189,9 @@ public class BiznesRadarParser {
     private BigDecimal getBigDecimal(Element kursElement) {
         if (kursElement == null)
             return null;
-        return new BigDecimal(kursElement.text());
+        return new BigDecimal(kursElement.text()
+                .replace(",", ".")
+                .replace(" ", "")
+                .replace("%", ""));
     }
 }
