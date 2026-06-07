@@ -3,10 +3,10 @@ services:
     container_name: postgres
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: ptnaza
-      POSTGRES_PASSWORD: ptnaza
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       PGDATA: /data/postgres
-      POSTGRES_DB: vigil-db
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres:/data/postgres
     ports:

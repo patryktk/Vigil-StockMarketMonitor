@@ -6,11 +6,11 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.boot.actuate.audit.listener.AuditListener;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @MappedSuperclass
-@EntityListeners(AuditListener.class)
+@EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
 
     @CreatedDate
@@ -31,11 +31,11 @@ public class BaseEntity {
 
     //TODO: check if update saves
     @LastModifiedDate
-    @Column(insertable = false, updatable = false)
+    @Column(insertable = false)
     private LocalDateTime updatedAt;
 
     //TODO: check if update saves
     @LastModifiedBy
-    @Column(insertable = false, updatable = false)
+    @Column(insertable = false)
     private String updatedBy;
 }

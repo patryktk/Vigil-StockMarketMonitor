@@ -6,14 +6,19 @@ import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Service;
 import pl.tkaczyk.scraperservice.model.dto.BiznesRadarDocuments;
 import pl.tkaczyk.scraperservice.model.dto.StockSnapshotDto;
+import pl.tkaczyk.scraperservice.service.BiznesRadarParser;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class BiznesRadarParser {
+public class BiznesRadarParserImpl implements BiznesRadarParser {
 
-    public StockSnapshotDto parseStockData(
+
+    @Override
+    public StockSnapshotDto parse(
             BiznesRadarDocuments biznesRadarDocuments
     ) {
         StockSnapshotDto stockSnapshotDto = new StockSnapshotDto();
@@ -140,16 +145,17 @@ public class BiznesRadarParser {
     }
 
     private void parseFinancialData(Document financialData, StockSnapshotDto stockSnapshotDto) {
-
-        Element priceElement = financialData.selectFirst("tr[data-field=Quote] td.h.newest .value .pv span");
-        BigDecimal price = getBigDecimal(priceElement);
-        stockSnapshotDto.setPrice(price);
-
-        Element priceToEarningsElement = financialData.selectFirst("tr[data-field=CZ] td.h.newest .value .pv span");
-        BigDecimal priceToEarnings = getBigDecimal(priceToEarningsElement);
-        stockSnapshotDto.setPriceToEarnings(priceToEarnings);
+        Map<String, String> map = new HashMap<>();
+        map.put("price", "Quote");
 
 
+        stockSnapshotDto.setPrice(getValue(
+                financialData,
+                getString2(map.get("price"))));
+
+        stockSnapshotDto.setPriceToEarnings(getValue(financialData, "tr[data-field=CZ] td.h.newest .value .pv span"));
+
+        //TODO:
         Element priceToBookValueElement = financialData.selectFirst("tr[data-field=CWK] td.h.newest .value .pv span");
         BigDecimal priceToBookValue = getBigDecimal(priceToBookValueElement);
         stockSnapshotDto.setPriceToBookValue(priceToBookValue);
@@ -184,6 +190,15 @@ public class BiznesRadarParser {
         Element earningsPerShareElement = financialData.selectFirst("tr[data-field=Z] td.h.newest .value .pv span");
         BigDecimal earningsPerShare = getBigDecimal(earningsPerShareElement);
         stockSnapshotDto.setEarningsPerShare(earningsPerShare);
+    }
+
+    private BigDecimal getValue(Document financialData, String selector) {
+        Element element = financialData.selectFirst(selector);
+        return getBigDecimal(element);
+    }
+
+    private String getString2(String value) {
+        return "tr[data-field=" + value + "] td.h.newest .value .pv span";
     }
 
     private BigDecimal getBigDecimal(Element kursElement) {

@@ -1,17 +1,39 @@
 package pl.tkaczyk.scraperservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 import pl.tkaczyk.scraperservice.model.dto.DividendAnnouncementDto;
+import pl.tkaczyk.scraperservice.model.dto.StrefaInwestorowDocument;
+import pl.tkaczyk.scraperservice.service.StrefaInwestorowParser;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class StrefaInwestorowParser {
+public class StrefaInwestorowParserImpl implements StrefaInwestorowParser {
+
+
+    @Override
+    public Optional<DividendAnnouncementDto> parse(StrefaInwestorowDocument document, String ticker) {
+        Elements rows = document.dividendAnnouncementDocument().select("table.table-dividends-desktop tbody tr");
+        for (Element row : rows) {
+
+            Elements tds = row.select("td");
+
+            if (tds.size() < 7)
+                continue;
+
+            if (tds.get(1).text().equalsIgnoreCase(ticker)) {
+                return Optional.ofNullable(parseStock(tds));
+            }
+        }
+        return Optional.empty();
+    }
 
     public DividendAnnouncementDto parseStock(Elements tds) {
 

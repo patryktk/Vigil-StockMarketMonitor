@@ -4,19 +4,17 @@ import lombok.RequiredArgsConstructor;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
 import pl.tkaczyk.scraperservice.model.dto.BiznesRadarDocuments;
+import pl.tkaczyk.scraperservice.service.BiznesRadarClient;
 import pl.tkaczyk.scraperservice.service.HtmlDocumentFetcher;
-import pl.tkaczyk.scraperservice.service.SnapshotProvider;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class BiznesRadarClient implements SnapshotProvider<BiznesRadarDocuments> {
+public class BiznesRadarClientImpl implements BiznesRadarClient {
 
     private final HtmlDocumentFetcher fetcher;
 
     @Override
-    public Optional<BiznesRadarDocuments> makeSnapshot(String ticker) {
+    public BiznesRadarDocuments makeSnapshot(String ticker) {
 
         Document financialData = fetcher.getDocument("https://www.biznesradar.pl/wskazniki-wartosci-rynkowej/" + ticker);
         Document rentData = fetcher.getDocument("https://www.biznesradar.pl/wskazniki-rentownosci/" + ticker);
@@ -29,7 +27,7 @@ public class BiznesRadarClient implements SnapshotProvider<BiznesRadarDocuments>
                 "https://www.biznesradar.pl/raporty-finansowe-przeplywy-pieniezne/" + ticker + ",Q");
 
 
-        return Optional.ofNullable(BiznesRadarDocuments.builder()
+        return BiznesRadarDocuments.builder()
                 .financialData(financialData)
                 .rentData(rentData)
                 .debtData(debtData)
@@ -37,7 +35,7 @@ public class BiznesRadarClient implements SnapshotProvider<BiznesRadarDocuments>
                 .bilansData(bilansData)
                 .raportBiznes(raportBiznes)
                 .raportFlow(raportFlow)
-                .build());
+                .build();
     }
 
 }
