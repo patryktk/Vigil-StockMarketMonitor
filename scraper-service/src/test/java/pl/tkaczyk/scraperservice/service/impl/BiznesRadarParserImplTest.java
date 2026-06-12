@@ -48,7 +48,7 @@ class BiznesRadarParserImplTest {
     }
 
     @Test
-    @DisplayName("Should return null")
+    @DisplayName("Should return null when element is missing")
     void shouldReturnNullWhenElementMissing() {
         Document emptyDoc = Jsoup.parse("<html></html>");
         BiznesRadarDocuments biznesRadarDocuments = BiznesRadarDocuments.builder()
@@ -68,7 +68,8 @@ class BiznesRadarParserImplTest {
 
 
     @Test
-    void should(){
+    @DisplayName("Should return null when document is null")
+    void shouldReturnNullWhenDocumentIsNull(){
         BiznesRadarDocuments biznesRadarDocuments = BiznesRadarDocuments.builder()
                 .financialData(null)
                 .rentData(new Document(""))
@@ -80,6 +81,8 @@ class BiznesRadarParserImplTest {
                 .build();
 
         StockSnapshotDto parse = biznesRadarParser.parse(biznesRadarDocuments);
+
+        assertThat(parse.getPrice()).isNull();
 
     }
 

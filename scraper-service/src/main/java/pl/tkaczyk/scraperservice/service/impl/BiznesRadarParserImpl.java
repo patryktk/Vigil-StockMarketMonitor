@@ -6,11 +6,10 @@ import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Service;
 import pl.tkaczyk.scraperservice.model.dto.BiznesRadarDocuments;
 import pl.tkaczyk.scraperservice.model.dto.StockSnapshotDto;
+import pl.tkaczyk.scraperservice.model.enums.Fields;
 import pl.tkaczyk.scraperservice.service.BiznesRadarParser;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -23,182 +22,111 @@ public class BiznesRadarParserImpl implements BiznesRadarParser {
     ) {
         StockSnapshotDto stockSnapshotDto = new StockSnapshotDto();
 
-        Document financialData = biznesRadarDocuments.financialData();
-        parseFinancialData(financialData, stockSnapshotDto);
+        if (biznesRadarDocuments.financialData() != null) {
+            parseFinancialData(biznesRadarDocuments.financialData(), stockSnapshotDto);
+        }
 
-        Document rentData = biznesRadarDocuments.rentData();
-        parseRentData(rentData, stockSnapshotDto);
+        if (biznesRadarDocuments.rentData() != null) {
+            parseRentData(biznesRadarDocuments.rentData(), stockSnapshotDto);
+        }
 
-        Document debtData = biznesRadarDocuments.debtData();
-        parseDebtData(debtData, stockSnapshotDto);
+        if (biznesRadarDocuments.debtData() != null) {
+            parseDebtData(biznesRadarDocuments.debtData(), stockSnapshotDto);
+        }
 
-        Document flowData = biznesRadarDocuments.flowData();
-        parseFlowData(flowData, stockSnapshotDto);
+        if (biznesRadarDocuments.flowData() != null) {
+            parseFlowData(biznesRadarDocuments.flowData(), stockSnapshotDto);
+        }
 
-        Document bilansData = biznesRadarDocuments.bilansData();
-        parseBilansData(bilansData, stockSnapshotDto);
+        if (biznesRadarDocuments.bilansData() != null) {
+            parseBilansData(biznesRadarDocuments.bilansData(), stockSnapshotDto);
+        }
 
-        Document raportBiznes = biznesRadarDocuments.raportBiznes();
-        parseRaportBiznes(raportBiznes, stockSnapshotDto);
+        if (biznesRadarDocuments.raportFlow() != null) {
+            parseRaportBiznes(biznesRadarDocuments.raportBiznes(), stockSnapshotDto);
 
+        }
 
-        Document raportFlow = biznesRadarDocuments.raportFlow();
-        parseRaportFlow(raportFlow, stockSnapshotDto);
+        if (biznesRadarDocuments.raportFlow() != null) {
+            parseRaportFlow(biznesRadarDocuments.raportFlow(), stockSnapshotDto);
+        }
 
         return stockSnapshotDto;
     }
 
     private void parseRaportFlow(Document raportFlow, StockSnapshotDto stockSnapshotDto) {
-        Element depreciationAndAmortizationElement = raportFlow.selectFirst(
-                "tr[data-field=CashflowAmortization] td.h.newest .value .pv span");
-        BigDecimal depreciationAndAmortization = getBigDecimal(depreciationAndAmortizationElement);
-        stockSnapshotDto.setDepreciationAndAmortization(depreciationAndAmortization);
+        stockSnapshotDto.setDepreciationAndAmortization(getValue(raportFlow, Fields.DEPRE_AMORT));
     }
 
     private void parseRaportBiznes(Document raportBiznes, StockSnapshotDto stockSnapshotDto) {
-        Element revenueElement = raportBiznes.selectFirst(
-                "tr[data-field=IncomeRevenues] td.h.newest .value .pv span");
-        BigDecimal revenue = getBigDecimal(revenueElement);
-        stockSnapshotDto.setRevenue(revenue);
+        stockSnapshotDto.setRevenue(getValue(raportBiznes, Fields.REVENUE));
 
+        stockSnapshotDto.setGrossProfit(getValue(raportBiznes, Fields.GROSS_PROFIT));
 
-        Element grossProfitElement = raportBiznes.selectFirst(
-                "tr[data-field=IncomeGrossProfit] td.h.newest .value .pv span");
-        BigDecimal grossProfit = getBigDecimal(grossProfitElement);
-        stockSnapshotDto.setGrossProfit(grossProfit);
+        stockSnapshotDto.setEbit(getValue(raportBiznes, Fields.EBIT));
 
-
-        Element ebitElement = raportBiznes.selectFirst("tr[data-field=IncomeEBIT] td.h.newest .value .pv span");
-        BigDecimal ebit = getBigDecimal(ebitElement);
-        stockSnapshotDto.setEbit(ebit);
-
-        Element netIncomeElement = raportBiznes.selectFirst("tr[data-field=IncomeNetProfit] td.h.newest .value .pv span");
-        BigDecimal netIncome = getBigDecimal(netIncomeElement);
-        stockSnapshotDto.setNetIncome(netIncome);
+        stockSnapshotDto.setNetIncome(getValue(raportBiznes, Fields.NET_PROFIT));
     }
 
     private void parseBilansData(Document bilansData, StockSnapshotDto stockSnapshotDto) {
-        Element equityElement = bilansData.selectFirst(
-                "tr[data-field=BalanceCapital] td.h.newest .value .pv span");
-        BigDecimal equity = getBigDecimal(equityElement);
-        stockSnapshotDto.setEquity(equity);
+        stockSnapshotDto.setEquity(getValue(bilansData, Fields.EQUITY));
     }
 
     private void parseFlowData(Document flowData, StockSnapshotDto stockSnapshotDto) {
-        Element currentRatioElement = flowData.selectFirst("tr[data-field=CR] td.h.newest .value .pv span");
-        BigDecimal currentRatio = getBigDecimal(currentRatioElement);
-        stockSnapshotDto.setCurrentRatio(currentRatio);
+        stockSnapshotDto.setCurrentRatio(getValue(flowData, Fields.CURRENT_RATIO));
     }
 
     private void parseDebtData(Document debtData, StockSnapshotDto stockSnapshotDto) {
-        Element totalDebtElement = debtData.selectFirst("tr[data-field=DTAR] td.h.newest .value .pv span");
-        BigDecimal totalDebt = getBigDecimal(totalDebtElement);
-        stockSnapshotDto.setTotalDebt(totalDebt);
+        stockSnapshotDto.setTotalDebt(getValue(debtData, Fields.DTAR));
 
+        stockSnapshotDto.setNetDebt(getValue(debtData, Fields.NETDEBT));
 
-        Element netDebtElement = debtData.selectFirst("tr[data-field=NetDebt] td.h.newest .value .pv span");
-        BigDecimal netDebt = getBigDecimal(netDebtElement);
-        stockSnapshotDto.setNetDebt(netDebt);
+        stockSnapshotDto.setNetDebtToEbitda(getValue(debtData, Fields.DEBTFIN));
 
+        stockSnapshotDto.setDebtToEquity(getValue(debtData, Fields.DEBT_EQUITY));
 
-        Element netFinancialDebtElement = debtData.selectFirst(
-                "tr[data-field=DebtFin] td.h.newest .value .pv span");
-        BigDecimal netFinancialDebt = getBigDecimal(netFinancialDebtElement);
-        stockSnapshotDto.setNetDebtToEbitda(netFinancialDebt);
-
-
-        Element debtToEquityElement = debtData.selectFirst("tr[data-field=CG] td.h.newest .value .pv span");
-        BigDecimal debtToEquity = getBigDecimal(debtToEquityElement);
-        stockSnapshotDto.setDebtToEquity(debtToEquity);
-
-
-        Element netDebtToEbitdaElement = debtData.selectFirst(
-                "tr[data-field=NetDebtEBITDA] td.h.newest .value .pv span");
-        BigDecimal netDebtToEbitda = getBigDecimal(netDebtToEbitdaElement);
-        stockSnapshotDto.setNetDebtToEbitda(netDebtToEbitda);
-
+        stockSnapshotDto.setNetDebtToEbitda(getValue(debtData, Fields.NETDEBT_EBITDA));
     }
 
     private void parseRentData(Document rentData, StockSnapshotDto stockSnapshotDto) {
-        Element roeElement = rentData.selectFirst("tr[data-field=ROE] td.h.newest .value .pv span");
-        BigDecimal returnOnEquity = getBigDecimal(roeElement);
-        stockSnapshotDto.setReturnOnEquity_pct(returnOnEquity);
+        stockSnapshotDto.setReturnOnEquity_pct(getValue(rentData, Fields.ROE));
 
-        Element roaElement = rentData.selectFirst("tr[data-field=ROA] td.h.newest .value .pv span");
-        BigDecimal returnOnAssets = getBigDecimal(roaElement);
-        stockSnapshotDto.setReturnOnAssets_pct(returnOnAssets);
+        stockSnapshotDto.setReturnOnAssets_pct(getValue(rentData, Fields.ROA));
 
+        stockSnapshotDto.setOperatingMargin_pct(getValue(rentData, Fields.OPM));
 
-        Element operatingMarginElement = rentData.selectFirst("tr[data-field=OPM] td.h.newest .value .pv span");
-        BigDecimal operatingMargin = getBigDecimal(operatingMarginElement);
-        stockSnapshotDto.setOperatingMargin_pct(operatingMargin);
+        stockSnapshotDto.setNetProfitMargin_pct(getValue(rentData, Fields.ROS));
 
-
-        Element netProfitMarginElement = rentData.selectFirst("tr[data-field=ROS] td.h.newest .value .pv span");
-        BigDecimal netProfitMargin = getBigDecimal(netProfitMarginElement);
-        stockSnapshotDto.setNetProfitMargin_pct(netProfitMargin);
-
-
-        Element salesMarginElement = rentData.selectFirst("tr[data-field=RS] td.h.newest .value .pv span");
-        BigDecimal salesMargin = getBigDecimal(salesMarginElement);
-        stockSnapshotDto.setSalesMargin_pct(salesMargin);
+        stockSnapshotDto.setSalesMargin_pct(getValue(rentData, Fields.RS));
     }
 
     private void parseFinancialData(Document financialData, StockSnapshotDto stockSnapshotDto) {
-        Map<String, String> map = new HashMap<>();
-        map.put("price", "Quote");
+        if (financialData == null)
+            return;
 
+        stockSnapshotDto.setPrice(getValue(financialData, Fields.PRICE));
 
-        stockSnapshotDto.setPrice(getValue(
-                financialData,
-                getString2(map.get("price"))));
+        stockSnapshotDto.setPriceToEarnings(getValue(financialData, Fields.PRICE_TO_EARNINGS));
 
-        stockSnapshotDto.setPriceToEarnings(getValue(financialData, "tr[data-field=CZ] td.h.newest .value .pv span"));
+        stockSnapshotDto.setPriceToBookValue(getValue(financialData, Fields.PRICE_TO_BOOK_VALUE));
 
-        //TODO:
-        Element priceToBookValueElement = financialData.selectFirst("tr[data-field=CWK] td.h.newest .value .pv span");
-        BigDecimal priceToBookValue = getBigDecimal(priceToBookValueElement);
-        stockSnapshotDto.setPriceToBookValue(priceToBookValue);
+        stockSnapshotDto.setPriceToSales(getValue(financialData, Fields.PRICE_TO_SALES));
 
+        stockSnapshotDto.setPriceToOperatingIncome(getValue(financialData, Fields.PRICE_TO_OPERATING_PROFIT));
 
-        Element priceToSalesElement = financialData.selectFirst("tr[data-field=CP] td.h.newest .value .pv span");
-        BigDecimal priceToSales = getBigDecimal(priceToSalesElement);
-        stockSnapshotDto.setPriceToSales(priceToSales);
+        stockSnapshotDto.setEvToSales(getValue(financialData, Fields.PRICE_TO_SALES));
 
+        stockSnapshotDto.setEvToEbit(getValue(financialData, Fields.EVEBIT));
 
-        Element priceToOperatingIncomeElement = financialData.selectFirst(
-                "tr[data-field=CZO] td.h.newest .value .pv span");
-        BigDecimal priceToOperatingIncome = getBigDecimal(priceToOperatingIncomeElement);
-        stockSnapshotDto.setPriceToOperatingIncome(priceToOperatingIncome);
+        stockSnapshotDto.setEvToEbitda(getValue(financialData, Fields.EVEBITDA));
 
-
-        Element evToSalesElement = financialData.selectFirst("tr[data-field=EVP] td.h.newest .value .pv span");
-        BigDecimal evToSales = getBigDecimal(evToSalesElement);
-        stockSnapshotDto.setEvToSales(evToSales);
-
-
-        Element evToEbitElement = financialData.selectFirst("tr[data-field=EVEBIT] td.h.newest .value .pv span");
-        BigDecimal evToEbit = getBigDecimal(evToEbitElement);
-        stockSnapshotDto.setEvToEbit(evToEbit);
-
-
-        Element evToEbitdaElement = financialData.selectFirst("tr[data-field=EVEBITDA] td.h.newest .value .pv span");
-        BigDecimal evToEbitda = getBigDecimal(evToEbitdaElement);
-        stockSnapshotDto.setEvToEbitda(evToEbitda);
-
-
-        Element earningsPerShareElement = financialData.selectFirst("tr[data-field=Z] td.h.newest .value .pv span");
-        BigDecimal earningsPerShare = getBigDecimal(earningsPerShareElement);
-        stockSnapshotDto.setEarningsPerShare(earningsPerShare);
+        stockSnapshotDto.setEarningsPerShare(getValue(financialData, Fields.EARNINGS_PER_SHARE));
     }
 
-    private BigDecimal getValue(Document financialData, String selector) {
-        Element element = financialData.selectFirst(selector);
+    private BigDecimal getValue(Document document, Fields field) {
+        String selector = field.getBzSelector();
+        Element element = document.selectFirst(selector);
         return getBigDecimal(element);
-    }
-
-    private String getString2(String value) {
-        return "tr[data-field=" + value + "] td.h.newest .value .pv span";
     }
 
     private BigDecimal getBigDecimal(Element kursElement) {
