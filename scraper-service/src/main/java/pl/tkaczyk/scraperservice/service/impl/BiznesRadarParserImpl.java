@@ -42,7 +42,7 @@ public class BiznesRadarParserImpl implements BiznesRadarParser {
             parseBilansData(biznesRadarDocuments.bilansData(), stockSnapshotDto);
         }
 
-        if (biznesRadarDocuments.raportFlow() != null) {
+        if (biznesRadarDocuments.raportBiznes() != null) {
             parseRaportBiznes(biznesRadarDocuments.raportBiznes(), stockSnapshotDto);
 
         }
@@ -81,7 +81,7 @@ public class BiznesRadarParserImpl implements BiznesRadarParser {
 
         stockSnapshotDto.setNetDebt(getValue(debtData, Fields.NETDEBT));
 
-        stockSnapshotDto.setNetDebtToEbitda(getValue(debtData, Fields.DEBTFIN));
+        stockSnapshotDto.setNetFinancialDebt(getValue(debtData, Fields.DEBTFIN));
 
         stockSnapshotDto.setDebtToEquity(getValue(debtData, Fields.DEBT_EQUITY));
 
