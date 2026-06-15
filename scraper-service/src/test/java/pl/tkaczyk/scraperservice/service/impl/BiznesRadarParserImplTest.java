@@ -125,6 +125,7 @@ class BiznesRadarParserImplTest {
         };
 
 
+        assert bzDocument != null;
         StockSnapshotDto parse = biznesRadarParser.parse(bzDocument);
 
 

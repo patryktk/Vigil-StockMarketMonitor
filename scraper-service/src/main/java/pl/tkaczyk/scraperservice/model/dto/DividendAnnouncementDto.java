@@ -16,7 +16,7 @@ public class DividendAnnouncementDto {
 
     private LocalDate lastDateToBuy;
     private BigDecimal dividendYield_pct;
-    private BigDecimal amount_price;
+    private BigDecimal amountPerStock;
     private LocalDate payDate;
 
 }

@@ -60,4 +60,5 @@ public class StockSnapshotRepositoryTest {
         assertThat(found.getCompany().getTicker()).isEqualTo("TSLA");
     }
 
+    //TODO: Napisać test dla brak company, uzupełnic wszystkie dane do testu. Co w przypadku jak comapny zostanie usunięte. Sprawdzenie pól z audi
 }

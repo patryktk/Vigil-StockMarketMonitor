@@ -8,6 +8,7 @@ import pl.tkaczyk.scraperservice.model.dto.BiznesRadarDocuments;
 import pl.tkaczyk.scraperservice.model.dto.StockSnapshotDto;
 import pl.tkaczyk.scraperservice.model.enums.Fields;
 import pl.tkaczyk.scraperservice.service.BiznesRadarParser;
+import pl.tkaczyk.scraperservice.utils.Utils;
 
 import java.math.BigDecimal;
 
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 public class BiznesRadarParserImpl implements BiznesRadarParser {
 
+    private final Utils utils;
 
     @Override
     public StockSnapshotDto parse(
@@ -126,15 +128,7 @@ public class BiznesRadarParserImpl implements BiznesRadarParser {
     private BigDecimal getValue(Document document, Fields field) {
         String selector = field.getBzSelector();
         Element element = document.selectFirst(selector);
-        return getBigDecimal(element);
-    }
-
-    private BigDecimal getBigDecimal(Element kursElement) {
-        if (kursElement == null)
-            return null;
-        return new BigDecimal(kursElement.text()
-                .replace(",", ".")
-                .replace(" ", "")
-                .replace("%", ""));
+        if(element == null) return null;
+        return utils.getBigDecimal(element.text());
     }
 }
