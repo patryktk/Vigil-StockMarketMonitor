@@ -18,7 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class StrefaInwestorowParserImpl implements StrefaInwestorowParser {
 
-    private static final String CSS_QUERY = "table.table-dividends-desktop tbody tr";
+    public static final String CSS_QUERY = "table.table-dividends-desktop tbody tr";
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private final Utils utils;
 
@@ -41,22 +41,34 @@ public class StrefaInwestorowParserImpl implements StrefaInwestorowParser {
         return Optional.empty();
     }
 
+    /***
+     * Parse stock data from table row
+     * 0 - company eg. MOL
+     * 1 - ticker eg. XTB
+     * 2 - name eg. XTB SA
+     * 3 - exDate eg. 11.06.2026
+     * 4 - yield eg. 3.93%
+     * 5 - dividendAmountPerStock eg. 4.07 zł
+     * 6 - payDate eg. 24.06.2026
+     * @param tds table row
+     * @return DividendAnnouncementDto
+     */
     private DividendAnnouncementDto parseStock(Elements tds) {
 
         DividendAnnouncementDto dividendAnnouncementDto = new DividendAnnouncementDto();
 
-//        String company = tds.get(0).text();   // MOL, XTB itd.
-//        String ticker = tds.get(1).text();   // XTB
-//        String name = tds.get(2).text();   // XTB SA
-        String exDate = tds.get(3).text();   // 11.06.2026 Ostatni dzień, w którym można kupić akcje z prawem do dywidendy
-        String yield = tds.get(4).text();   // 3.93% Stopa dywidendy
-        String dividendAmountPerStock = tds.get(5).text();   // 4.07 zł Dywidenda na akcję
-        String payDate = tds.get(6).text();   // 24.06.2026 Dzień wypłaty dywidendy
+//        String company = tds.get(0).text();
+//        String ticker = tds.get(1).text();
+//        String name = tds.get(2).text();
+        String lastDateToBuy = tds.get(3).text();
+        String yield = tds.get(4).text();
+        String dividendAmountPerStock = tds.get(5).text();
+        String payDate = tds.get(6).text();
 
 
         dividendAnnouncementDto.setAmountPerStock(utils.getBigDecimal(dividendAmountPerStock));
-        dividendAnnouncementDto.setPayDate(LocalDate.parse(payDate, formatter));
-        dividendAnnouncementDto.setLastDateToBuy(LocalDate.parse(exDate, formatter));
+        dividendAnnouncementDto.setPayDate(payDate.isEmpty() ? null : LocalDate.parse(payDate, formatter));
+        dividendAnnouncementDto.setLastDateToBuy(lastDateToBuy.isEmpty() ? null : LocalDate.parse(lastDateToBuy, formatter));
         dividendAnnouncementDto.setDividendYield_pct(utils.getBigDecimal(yield));
 
         return dividendAnnouncementDto;

@@ -5,29 +5,29 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ClassPathResource;
 import pl.tkaczyk.scraperservice.model.dto.BiznesRadarDocuments;
 import pl.tkaczyk.scraperservice.model.dto.StockSnapshotDto;
 import pl.tkaczyk.scraperservice.model.enums.Fields;
+import pl.tkaczyk.scraperservice.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(MockitoExtension.class)
 class BiznesRadarParserImplTest {
 
-    BiznesRadarParserImpl biznesRadarParser = new BiznesRadarParserImpl();
+    private final Utils utils = new Utils();
+
+    BiznesRadarParserImpl parser = new BiznesRadarParserImpl(utils);
 
 
     @Test
@@ -60,7 +60,7 @@ class BiznesRadarParserImplTest {
                 .build();
 
 
-        StockSnapshotDto parse = biznesRadarParser.parse(biznesRadarDocuments);
+        StockSnapshotDto parse = parser.parse(biznesRadarDocuments);
 
 
         assertThat(parse.getPrice()).isEqualByComparingTo(new BigDecimal("94.68"));
@@ -126,7 +126,7 @@ class BiznesRadarParserImplTest {
 
 
         assert bzDocument != null;
-        StockSnapshotDto parse = biznesRadarParser.parse(bzDocument);
+        StockSnapshotDto parse = parser.parse(bzDocument);
 
 
         switch (expectedField) {
@@ -189,7 +189,7 @@ class BiznesRadarParserImplTest {
                 .raportFlow(new Document(""))
                 .build();
 
-        StockSnapshotDto result = biznesRadarParser.parse(biznesRadarDocuments);
+        StockSnapshotDto result = parser.parse(biznesRadarDocuments);
 
         assertThat(result.getPrice()).isNull();
     }
@@ -208,7 +208,7 @@ class BiznesRadarParserImplTest {
                 .raportFlow(new Document(""))
                 .build();
 
-        StockSnapshotDto parse = biznesRadarParser.parse(biznesRadarDocuments);
+        StockSnapshotDto parse = parser.parse(biznesRadarDocuments);
 
         assertThat(parse.getPrice()).isNull();
 
@@ -224,7 +224,7 @@ class BiznesRadarParserImplTest {
         Mockito.when(financialDoc.selectFirst(Fields.PRICE.getBzSelector())).thenReturn(priceElement);
 
         BiznesRadarDocuments documents = BiznesRadarDocuments.builder().financialData(financialDoc).build();
-        StockSnapshotDto result = biznesRadarParser.parse(documents);
+        StockSnapshotDto result = parser.parse(documents);
 
         assertThat(result.getPrice()).isEqualByComparingTo(new BigDecimal("123.45"));
     }
@@ -239,7 +239,7 @@ class BiznesRadarParserImplTest {
         Mockito.when(financialDoc.selectFirst(Fields.PRICE.getBzSelector())).thenReturn(priceElement);
 
         BiznesRadarDocuments documents = BiznesRadarDocuments.builder().financialData(financialDoc).build();
-        StockSnapshotDto result = biznesRadarParser.parse(documents);
+        StockSnapshotDto result = parser.parse(documents);
         assertThat(result.getPrice()).isEqualByComparingTo(new BigDecimal(expectedPrice));
     }
 
