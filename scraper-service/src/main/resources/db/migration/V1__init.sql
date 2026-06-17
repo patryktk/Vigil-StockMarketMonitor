@@ -32,7 +32,7 @@ CREATE TABLE stock_snapshot
     created_by                    VARCHAR(255),
     updated_at                    TIMESTAMP WITHOUT TIME ZONE,
     updated_by                    VARCHAR(255),
-    company_id                    BIGINT,
+    company_id                    BIGINT NOT NULL,
     price                         DECIMAL,
     price_to_earnings             DECIMAL,
     price_to_book_value           DECIMAL,

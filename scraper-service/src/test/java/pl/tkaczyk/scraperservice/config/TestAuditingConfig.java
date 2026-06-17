@@ -11,6 +11,6 @@ public class TestAuditingConfig {
 
     @Bean
     public AuditorAware<String> auditAwareImpl() {
-        return () -> Optional.of("test");
+        return () -> Optional.of("user_test");
     }
 }

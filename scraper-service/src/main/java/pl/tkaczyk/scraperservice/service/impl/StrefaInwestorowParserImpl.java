@@ -19,7 +19,7 @@ import java.util.Optional;
 public class StrefaInwestorowParserImpl implements StrefaInwestorowParser {
 
     public static final String CSS_QUERY = "table.table-dividends-desktop tbody tr";
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private final Utils utils;
 
     @Override
@@ -46,7 +46,7 @@ public class StrefaInwestorowParserImpl implements StrefaInwestorowParser {
      * 0 - company eg. MOL
      * 1 - ticker eg. XTB
      * 2 - name eg. XTB SA
-     * 3 - exDate eg. 11.06.2026
+     * 3 - lastDateToBuy eg. 11.06.2026
      * 4 - yield eg. 3.93%
      * 5 - dividendAmountPerStock eg. 4.07 zł
      * 6 - payDate eg. 24.06.2026
