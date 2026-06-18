@@ -7,6 +7,8 @@ import pl.tkaczyk.scraperservice.mapper.DividendAnnouncementMapper;
 import pl.tkaczyk.scraperservice.model.dto.StrefaInwestorowDocument;
 import pl.tkaczyk.scraperservice.repository.DividendAnnouncementRepository;
 import pl.tkaczyk.scraperservice.service.Scraper;
+import pl.tkaczyk.scraperservice.service.StrefaInwestorowClient;
+import pl.tkaczyk.scraperservice.service.StrefaInwestorowParser;
 
 @RequiredArgsConstructor
 @Service
@@ -15,8 +17,8 @@ public class DividendAnnouncementService implements Scraper {
     private final DividendAnnouncementMapper dividendAnnouncementMapper;
     private final DividendAnnouncementRepository dividendAnnouncementRepository;
 
-    private final StrefaInwestorowClientImpl strefaInwestorowClient;
-    private final StrefaInwestorowParserImpl strefaInwestorowParser;
+    private final StrefaInwestorowClient strefaInwestorowClient;
+    private final StrefaInwestorowParser strefaInwestorowParser;
 
     @Transactional
     @Override

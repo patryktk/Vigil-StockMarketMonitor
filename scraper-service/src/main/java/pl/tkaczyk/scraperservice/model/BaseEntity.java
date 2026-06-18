@@ -29,12 +29,10 @@ public class BaseEntity {
     @Column(updatable = false)
     private String createdBy;
 
-    //TODO: check if update saves
     @LastModifiedDate
     @Column(insertable = false)
     private LocalDateTime updatedAt;
 
-    //TODO: check if update saves
     @LastModifiedBy
     @Column(insertable = false)
     private String updatedBy;

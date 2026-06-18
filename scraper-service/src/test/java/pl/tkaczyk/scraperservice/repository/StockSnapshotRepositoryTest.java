@@ -1,8 +1,6 @@
-package pl.tkaczyk.scraperservice;
+package pl.tkaczyk.scraperservice.repository;
 
 import jakarta.persistence.EntityManager;
-import org.assertj.core.api.Assertions;
-import org.assertj.core.api.ThrowableAssertAlternative;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +9,6 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Import;
-import org.springframework.util.Assert;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
@@ -19,8 +16,6 @@ import pl.tkaczyk.scraperservice.config.FlywayConfig;
 import pl.tkaczyk.scraperservice.config.TestAuditingConfig;
 import pl.tkaczyk.scraperservice.model.Company;
 import pl.tkaczyk.scraperservice.model.StockSnapshot;
-import pl.tkaczyk.scraperservice.repository.CompanyRepository;
-import pl.tkaczyk.scraperservice.repository.StockSnapshotRepository;
 
 import java.math.BigDecimal;
 
@@ -174,7 +169,6 @@ public class StockSnapshotRepositoryTest {
         StockSnapshot snapshot = new StockSnapshot();
         snapshot.setPrice(new BigDecimal("142.50"));
         snapshot.setPriceToEarnings(new BigDecimal("18.20"));
-        stockSnapshotRepository.save(snapshot);
-//        assertThatException().isThrownBy(() -> stockSnapshotRepository.save(snapshot));
+        assertThatException().isThrownBy(() -> stockSnapshotRepository.save(snapshot));
     }
 }

@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface CompanyRepository extends CrudRepository<Company, Long> {
-    Optional<Company> findCompanyByTicker(String ticker);
+    Optional<Company> findByTicker(String ticker);
 }

@@ -6,7 +6,7 @@ CREATE TABLE company
     updated_at   TIMESTAMP WITHOUT TIME ZONE,
     updated_by   VARCHAR(255),
     company_name VARCHAR(255),
-    ticker       VARCHAR(255),
+    ticker       VARCHAR(255) UNIQUE NOT NULL,
     CONSTRAINT pk_company PRIMARY KEY (id)
 );
 
