@@ -1,6 +1,7 @@
 package pl.tkaczyk.scraperservice.repository;
 
 import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ class CompanyRepositoryTest {
     @Autowired
     CompanyRepository companyRepository;
 
+    @Autowired
+    EntityManager entityManager;
+
     @Test
     @DisplayName("Should save and retrieve company")
     void shouldSaveAndRetrieveCompany() {
@@ -63,5 +67,32 @@ class CompanyRepositoryTest {
         Company company = Company.builder().id(null).companyName("TSLA SA").ticker(null).build();
 
         assertThrows(org.springframework.dao.DataIntegrityViolationException.class, () -> companyRepository.save(company));
+    }
+
+    @Test
+    @DisplayName("Should find company by ticker")
+    void shouldFindCompanyByTicker() {
+        String ticker = "TSL";
+        Company company = Company.builder().id(null).companyName("TSLA SA").ticker(ticker).build();
+        companyRepository.save(company);
+
+        entityManager.flush();
+
+        companyRepository.findByTicker(ticker).ifPresent(
+                assertCompany -> assertEquals(ticker, assertCompany.getTicker())
+        );
+    }
+
+    @Test
+    @DisplayName("Should return Optional.empty find company by ticker")
+    void shouldReturnOptionalEmptyFindCompanyByTicker() {
+        String ticker = "TSL";
+        Company company = Company.builder().id(null).companyName("TSLA SA").ticker("TSLA").build();
+        companyRepository.save(company);
+
+        entityManager.flush();
+
+
+        org.assertj.core.api.Assertions.assertThat(companyRepository.findByTicker(ticker).isEmpty());
     }
 }
