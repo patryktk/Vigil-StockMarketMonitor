@@ -8,5 +8,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Configuration
 @EnableScheduling
 @EnableResilientMethods
+@EnableJpaAuditing(auditorAwareRef = "auditAwareImpl")
 public class Config {
 }
