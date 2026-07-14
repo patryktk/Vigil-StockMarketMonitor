@@ -6,7 +6,6 @@ server:
 
 application:
   google:
-    serivce-account-key: ${GOOGLE_APPLICATION_CREDENTIALS_JSON}
     sheet:
       spreadsheetId: "1HhNvx_7KACCB1AqK_rPPygucTtqr5mo6YK7yo8rW12U"
       #      tickerRange: "Arkusz1!C4:D4"
