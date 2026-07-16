@@ -9,6 +9,6 @@ application:
     sheet:
       spreadsheetId: "1HhNvx_7KACCB1AqK_rPPygucTtqr5mo6YK7yo8rW12U"
       #      tickerRange: "Arkusz1!C4:D4"
-      tickerRange: "Arkusz2!C6:L6"
-      saveRangeName: "Arkusz2!"
+      tickerRange: "Arkusz3!C6:L6"
+      saveRangeName: "Arkusz3!"
       saveRangeStartColNumber: 16

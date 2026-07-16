@@ -1,7 +1,7 @@
 package pl.tkaczyk.sheetsservice.mapper;
 
+import model.dto.TickerDto;
 import org.mapstruct.Mapper;
-import pl.tkaczyk.sheetsservice.model.dto.TickerDto;
 
 import java.util.Collection;
 import java.util.List;

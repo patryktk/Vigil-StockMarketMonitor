@@ -18,6 +18,8 @@ public class FlywayConfig {
                 .baselineOnMigrate(true)
                 .load();
 
+        //TODO: Zmienić. Tylko wersja dev.
+        flyway.repair();
         // Ręczne wymuszenie uruchomienia migracji w momencie tworzenia beana!
         flyway.migrate();
 

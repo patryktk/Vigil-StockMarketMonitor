@@ -4,12 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
-import pl.tkaczyk.scraperservice.model.dto.DividendAnnouncementDto;
+import model.dto.DividendAnnouncementDto;
 import pl.tkaczyk.scraperservice.model.dto.StrefaInwestorowDocument;
 import pl.tkaczyk.scraperservice.service.StrefaInwestorowParser;
 import pl.tkaczyk.scraperservice.utils.Utils;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;

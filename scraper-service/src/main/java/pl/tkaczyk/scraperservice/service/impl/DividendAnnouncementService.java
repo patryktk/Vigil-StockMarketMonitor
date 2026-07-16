@@ -5,8 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.tkaczyk.scraperservice.mapper.DividendAnnouncementMapper;
 import pl.tkaczyk.scraperservice.model.Company;
-import pl.tkaczyk.scraperservice.model.DividendAnnouncement;
-import pl.tkaczyk.scraperservice.model.dto.DividendAnnouncementDto;
+import model.dto.DividendAnnouncementDto;
 import pl.tkaczyk.scraperservice.model.dto.StrefaInwestorowDocument;
 import pl.tkaczyk.scraperservice.repository.DividendAnnouncementRepository;
 import pl.tkaczyk.scraperservice.service.CompanyService;
@@ -18,7 +17,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class DividendAnnouncementService implements Scraper {
+public class DividendAnnouncementService implements Scraper<DividendAnnouncementDto> {
 
     private final DividendAnnouncementMapper dividendAnnouncementMapper;
     private final DividendAnnouncementRepository dividendAnnouncementRepository;
@@ -31,13 +30,15 @@ public class DividendAnnouncementService implements Scraper {
 
     @Transactional
     @Override
-    public void scrape(String ticker) {
+    public Optional<DividendAnnouncementDto> scrape(String ticker) {
 
         Company company = companyService.findCompanyByTickerOrCreate(ticker);
 
         StrefaInwestorowDocument strefaInwestorowDocument = strefaInwestorowClient.fetch();
-        strefaInwestorowParser.parse(strefaInwestorowDocument, ticker)
+
+        return strefaInwestorowParser.parse(strefaInwestorowDocument, ticker)
                 .map(dto -> dividendAnnouncementMapper.toEntity(dto, company))
-                .ifPresent(dividendAnnouncementRepository::save);
+                .map(dividendAnnouncementRepository::save)
+                .map(dividendAnnouncementMapper::toDto);
     }
 }

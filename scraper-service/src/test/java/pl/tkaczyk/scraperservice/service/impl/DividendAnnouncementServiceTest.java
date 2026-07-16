@@ -12,7 +12,7 @@ import pl.tkaczyk.scraperservice.exception.HtmlFetchException;
 import pl.tkaczyk.scraperservice.mapper.DividendAnnouncementMapper;
 import pl.tkaczyk.scraperservice.model.Company;
 import pl.tkaczyk.scraperservice.model.DividendAnnouncement;
-import pl.tkaczyk.scraperservice.model.dto.DividendAnnouncementDto;
+import model.dto.DividendAnnouncementDto;
 import pl.tkaczyk.scraperservice.model.dto.StrefaInwestorowDocument;
 import pl.tkaczyk.scraperservice.repository.DividendAnnouncementRepository;
 import pl.tkaczyk.scraperservice.service.CompanyService;

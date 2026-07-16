@@ -1,4 +1,4 @@
-package pl.tkaczyk.scraperservice.model.dto;
+package model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

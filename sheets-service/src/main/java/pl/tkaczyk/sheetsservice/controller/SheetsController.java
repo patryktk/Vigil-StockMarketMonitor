@@ -1,11 +1,10 @@
 package pl.tkaczyk.sheetsservice.controller;
 
 import lombok.RequiredArgsConstructor;
+import model.dto.InvestDataDto;
+import model.dto.TickerDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import pl.tkaczyk.sheetsservice.model.dto.TickerDto;
+import org.springframework.web.bind.annotation.*;
 import pl.tkaczyk.sheetsservice.service.GoogleSheetsService;
 
 import java.util.List;
@@ -20,6 +19,12 @@ public class SheetsController {
     @GetMapping("/read")
     public ResponseEntity<List<TickerDto>> readTicker(){
         return ResponseEntity.ok(googleSheetsService.readTicker());
+    }
+
+    @PostMapping("/write")
+    public ResponseEntity<Void> writeData(@RequestBody List<InvestDataDto> payload) {
+        googleSheetsService.writeData(payload);
+        return ResponseEntity.ok().build();
     }
 
 }

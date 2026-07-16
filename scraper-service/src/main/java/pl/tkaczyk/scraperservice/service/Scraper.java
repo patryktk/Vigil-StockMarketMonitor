@@ -1,6 +1,8 @@
 package pl.tkaczyk.scraperservice.service;
 
-public interface Scraper {
+import java.util.Optional;
 
-    void scrape(String ticker);
+public interface Scraper<T> {
+
+    Optional<T> scrape(String ticker);
 }

@@ -1,4 +1,4 @@
-package pl.tkaczyk.sheetsservice.model.dto;
+package model.dto;
 
 import lombok.Builder;
 

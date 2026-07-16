@@ -1,7 +1,7 @@
 package pl.tkaczyk.scraperservice.service.impl;
 
+import model.dto.StockSnapshotDto;
 import org.assertj.core.api.Assertions;
-import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,13 +14,11 @@ import pl.tkaczyk.scraperservice.mapper.StockMapper;
 import pl.tkaczyk.scraperservice.model.Company;
 import pl.tkaczyk.scraperservice.model.StockSnapshot;
 import pl.tkaczyk.scraperservice.model.dto.BiznesRadarDocuments;
-import pl.tkaczyk.scraperservice.model.dto.StockSnapshotDto;
 import pl.tkaczyk.scraperservice.repository.StockSnapshotRepository;
 import pl.tkaczyk.scraperservice.service.BiznesRadarClient;
 import pl.tkaczyk.scraperservice.service.BiznesRadarParser;
 import pl.tkaczyk.scraperservice.service.CompanyService;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
