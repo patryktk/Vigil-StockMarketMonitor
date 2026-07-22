@@ -11,7 +11,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import pl.tkaczyk.scraperservice.config.FlywayConfig;
 import pl.tkaczyk.scraperservice.config.TestAuditingConfig;
 import pl.tkaczyk.scraperservice.model.dto.CompanyDTO;
 import pl.tkaczyk.scraperservice.service.CompanyService;

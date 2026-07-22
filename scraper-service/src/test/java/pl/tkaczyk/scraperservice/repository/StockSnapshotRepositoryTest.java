@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Import;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
-import pl.tkaczyk.scraperservice.config.FlywayConfig;
 import pl.tkaczyk.scraperservice.config.TestAuditingConfig;
 import pl.tkaczyk.scraperservice.model.Company;
 import pl.tkaczyk.scraperservice.model.StockSnapshot;
@@ -26,7 +25,6 @@ import static org.assertj.core.api.Assertions.assertThatException;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
 @Import(TestAuditingConfig.class)
-@ImportAutoConfiguration(FlywayConfig.class)
 public class StockSnapshotRepositoryTest {
 
     @Container

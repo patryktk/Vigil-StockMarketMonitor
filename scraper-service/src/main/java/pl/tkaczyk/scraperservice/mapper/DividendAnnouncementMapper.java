@@ -10,6 +10,7 @@ import model.dto.DividendAnnouncementDto;
 public interface DividendAnnouncementMapper {
 
     @Mapping(target = "company", source = "company")
+    @Mapping(target = "id", ignore = true)
     DividendAnnouncement toEntity(DividendAnnouncementDto dto, Company company);
 
     DividendAnnouncementDto toDto(DividendAnnouncement entity);
