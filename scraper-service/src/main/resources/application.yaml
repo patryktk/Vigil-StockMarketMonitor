@@ -19,7 +19,8 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: false
     validate-on-migrate: true
-
+  kafka:
+    bootstrap-servers: localhost:9092 #kafka:9092
 
 resilience4j:
   retry:

@@ -1,8 +1,11 @@
+server:
+  port: 8040
+
 spring:
   application:
     name: sheets-service
-server:
-  port: 8040
+  kafka:
+    bootstrap-servers: localhost:9092 #kafka:9092
 
 application:
   google:
