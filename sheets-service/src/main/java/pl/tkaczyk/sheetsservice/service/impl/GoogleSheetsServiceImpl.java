@@ -14,6 +14,7 @@ import pl.tkaczyk.sheetsservice.mapper.StockDataSheetRowMapper;
 import pl.tkaczyk.sheetsservice.model.dto.StockDataSheetRow;
 import pl.tkaczyk.sheetsservice.service.GoogleSheetsService;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -36,8 +37,8 @@ public class GoogleSheetsServiceImpl implements GoogleSheetsService {
 
             return googleSheetMapper.mapToTickerList(tickersValues);
 
-        }catch (Exception e){
-            System.out.println("Error: " + e.getMessage());
+        }catch (IOException e){
+            log.error("Error while reading ticker from Google Sheets", e);
         }
         return null;
     }
