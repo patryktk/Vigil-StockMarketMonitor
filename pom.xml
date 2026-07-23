@@ -32,6 +32,7 @@
         <lombok.version>1.18.46</lombok.version>
         <spring-boot.version>4.0.6</spring-boot.version>
         <flyway.version>11.14.1</flyway.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
     </properties>
     <modules>
         <module>common</module>
@@ -43,7 +44,12 @@
 
 <!--    Tutaj dodaje biblioteki dla wszystkich modułów -->
     <dependencies>
-
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>annotationProcessor</scope>
+            <version>${lombok.version}</version>
+        </dependency>
     </dependencies>
 
 <!--    Tutaj tylko rejestruje wersje danych bibliotek-->
@@ -56,11 +62,12 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>org.projectlombok</groupId>-->
-<!--                <artifactId>lombok</artifactId>-->
-<!--                <version>${lombok.version}</version>-->
-<!--            </dependency>-->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <scope>annotationProcessor</scope>
+                <version>${lombok.version}</version>
+            </dependency>
             <dependency>
                 <groupId>pl.tkaczyk</groupId>
                 <artifactId>common</artifactId>
@@ -72,6 +79,11 @@
                 <version>2.0.5</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -89,6 +101,17 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <configuration>
                         <release>${java.version}</release>
+
+                        <annotationProcessorPaths>
+
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>${lombok.version}</version>
+                            </path>
+
+
+                        </annotationProcessorPaths>
                     </configuration>
                 </plugin>
             </plugins>

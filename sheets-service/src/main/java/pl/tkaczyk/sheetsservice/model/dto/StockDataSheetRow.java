@@ -1,17 +1,14 @@
-package pl.tkaczyk.scraperservice.model.dto;
+package pl.tkaczyk.sheetsservice.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class StockSnapshotDto {
+@Data
+public class StockDataSheetRow {
 
     private BigDecimal price;
 
@@ -54,4 +51,21 @@ public class StockSnapshotDto {
 
 
     private BigDecimal equity;
+
+    public List<Object> toColumnList() {
+        return Arrays.stream(this.getClass().getDeclaredFields())
+                .map(field -> {
+                    try {
+                        field.setAccessible(true);
+                        return formatValue(String.valueOf((BigDecimal) field.get(this)));
+                    } catch (IllegalAccessException e) {
+                        return "Error";
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
+    private String formatValue(String val) {
+        return (val != null ? val : "No data").replace(",", ".");
+    }
 }

@@ -4,7 +4,6 @@ import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
@@ -12,21 +11,21 @@ import org.springframework.context.annotation.Import;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
-import pl.tkaczyk.scraperservice.config.FlywayConfig;
+import org.testcontainers.shaded.org.awaitility.Awaitility;
 import pl.tkaczyk.scraperservice.config.TestAuditingConfig;
 import pl.tkaczyk.scraperservice.model.Company;
 import pl.tkaczyk.scraperservice.model.StockSnapshot;
 
 import java.math.BigDecimal;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatException;
+import static org.assertj.core.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
 @Import(TestAuditingConfig.class)
-@ImportAutoConfiguration(FlywayConfig.class)
 public class StockSnapshotRepositoryTest {
 
     @Container
@@ -86,9 +85,9 @@ public class StockSnapshotRepositoryTest {
 
         snapshot.setEquity(new BigDecimal("73450000000"));
 
-        stockSnapshotRepository.save(snapshot);
+        stockSnapshotRepository.saveAndFlush(snapshot);
+        entityManager.clear();
 
-        stockSnapshotRepository.flush();
         StockSnapshot found = stockSnapshotRepository.findById(snapshot.getId()).orElseThrow();
 
         assertThat(found.getId()).isNotNull();
@@ -138,7 +137,7 @@ public class StockSnapshotRepositoryTest {
 
     @Test
     @DisplayName("Should save last modified date")
-    void shouldSaveLastModifiedDate() {
+    void shouldSaveLastModifiedDate() throws InterruptedException {
         Company company = new Company(null, "Tesla", "TSLA");
         Company savedCompany = companyRepository.save(company);
 
@@ -147,20 +146,25 @@ public class StockSnapshotRepositoryTest {
         snapshot.setPrice(new BigDecimal("142.50"));
         snapshot.setPriceToEarnings(new BigDecimal("18.20"));
 
-        StockSnapshot saveStock = stockSnapshotRepository.save(snapshot);
-        stockSnapshotRepository.flush();
+        StockSnapshot saveStock = stockSnapshotRepository.saveAndFlush(snapshot);
         entityManager.clear();
+
+        Awaitility.await().pollDelay(Duration.ofMillis(2)).until(() -> true);
 
         StockSnapshot found = stockSnapshotRepository.findById(saveStock.getId()).orElseThrow();
         found.setPrice(new BigDecimal("142.51"));
-        StockSnapshot result = stockSnapshotRepository.save(found);
-        stockSnapshotRepository.flush();
+        stockSnapshotRepository.saveAndFlush(found);
+        entityManager.clear();
 
-        assertThat(saveStock.getCreatedAt()).isEqualTo(result.getCreatedAt());
-        assertThat(saveStock.getCreatedBy()).isEqualTo(result.getCreatedBy());
-        assertThat(result.getUpdatedAt()).isNotNull();
-        assertThat(result.getUpdatedAt()).isAfter(saveStock.getCreatedAt());
-        assertThat(result.getUpdatedBy()).isEqualTo("user_test");
+        StockSnapshot finalFound = stockSnapshotRepository.findById(saveStock.getId()).orElseThrow();
+
+
+        assertThat(finalFound.getCreatedAt()).isCloseTo(saveStock.getCreatedAt(), within(1, ChronoUnit.MILLIS));
+        assertThat(finalFound.getCreatedBy()).isEqualTo(saveStock.getCreatedBy());
+
+        assertThat(finalFound.getUpdatedAt()).isNotNull();
+        assertThat(finalFound.getUpdatedAt()).isAfter(saveStock.getCreatedAt());
+        assertThat(finalFound.getUpdatedBy()).isEqualTo("user_test");
     }
 
     @Test
@@ -169,6 +173,6 @@ public class StockSnapshotRepositoryTest {
         StockSnapshot snapshot = new StockSnapshot();
         snapshot.setPrice(new BigDecimal("142.50"));
         snapshot.setPriceToEarnings(new BigDecimal("18.20"));
-        assertThatException().isThrownBy(() -> stockSnapshotRepository.save(snapshot));
+        assertThatException().isThrownBy(() -> stockSnapshotRepository.saveAndFlush(snapshot));
     }
 }

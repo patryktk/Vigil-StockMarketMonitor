@@ -1,5 +1,6 @@
 package pl.tkaczyk.scraperservice.service.impl;
 
+import model.dto.StockSnapshotDto;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,7 +13,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.springframework.core.io.ClassPathResource;
 import pl.tkaczyk.scraperservice.model.dto.BiznesRadarDocuments;
-import pl.tkaczyk.scraperservice.model.dto.StockSnapshotDto;
 import pl.tkaczyk.scraperservice.model.enums.Fields;
 import pl.tkaczyk.scraperservice.utils.Utils;
 

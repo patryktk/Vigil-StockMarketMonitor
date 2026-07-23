@@ -1,11 +1,11 @@
 package pl.tkaczyk.scraperservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import model.dto.StockSnapshotDto;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Service;
 import pl.tkaczyk.scraperservice.model.dto.BiznesRadarDocuments;
-import pl.tkaczyk.scraperservice.model.dto.StockSnapshotDto;
 import pl.tkaczyk.scraperservice.model.enums.Fields;
 import pl.tkaczyk.scraperservice.service.BiznesRadarParser;
 import pl.tkaczyk.scraperservice.utils.Utils;

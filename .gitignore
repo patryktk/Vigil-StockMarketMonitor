@@ -8,3 +8,5 @@ target/
 logs/
 .DS_Store
 Thumbs.db
+/sheets-service/src/main/resources/service-account-key.json
+/sheets-service/src/main/resources/credentials/service-account-key.json

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.core.io.ClassPathResource;
-import pl.tkaczyk.scraperservice.model.dto.DividendAnnouncementDto;
+import model.dto.DividendAnnouncementDto;
 import pl.tkaczyk.scraperservice.model.dto.StrefaInwestorowDocument;
 import pl.tkaczyk.scraperservice.service.StrefaInwestorowParser;
 import pl.tkaczyk.scraperservice.utils.Utils;

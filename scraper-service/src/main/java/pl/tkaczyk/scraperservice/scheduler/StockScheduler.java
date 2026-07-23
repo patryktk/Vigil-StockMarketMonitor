@@ -16,7 +16,11 @@ public class StockScheduler {
     @Scheduled(fixedDelay = 300_000)
     public void scrapIntraday(){
         log.info("Starting scrap intraday");
+        //TODO: Odczytanie listy tickerów z excela
+
         scrapService.scrape("XTB");
+
+        //TODO: Zapisanie wszystko
     }
 
     @Scheduled(cron = "0 0 21 * * MON-FRI", zone = "Europe/Warsaw")

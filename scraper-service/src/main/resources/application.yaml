@@ -1,19 +1,24 @@
 server:
   port: 8030
 
+debug: true
 
 spring:
   application:
     name: scraper-service
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/vigil-db #${DB_URL}
+    username: ptnaza #${DB_USERNAME}
+    password: ptnaza #${DB_PASSWORD}
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: none
-    depends-on: flyway
+      ddl-auto: validate
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+    validate-on-migrate: true
 
 
 resilience4j:
