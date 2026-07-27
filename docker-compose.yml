@@ -47,6 +47,7 @@ services:
     container_name: vigil-kafka
     ports:
       - "9092:9092"
+      - "29092:29092"
     extends:
       file: common-config.yml
       service: network-deploy-service

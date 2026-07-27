@@ -5,7 +5,7 @@ spring:
   application:
     name: sheets-service
   kafka:
-    bootstrap-servers: localhost:9092 #kafka:9092
+    bootstrap-servers: localhost:29092 #kafka:9092
 
 application:
   google:

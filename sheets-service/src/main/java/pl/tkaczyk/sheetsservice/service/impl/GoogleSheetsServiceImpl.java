@@ -9,6 +9,7 @@ import model.dto.StockSnapshotDto;
 import model.dto.TickerDto;
 import org.springframework.stereotype.Service;
 import pl.tkaczyk.sheetsservice.config.GoogleSheetsProperties;
+import pl.tkaczyk.sheetsservice.exception.GoogleSheetsIntegrationException;
 import pl.tkaczyk.sheetsservice.mapper.GoogleSheetMapper;
 import pl.tkaczyk.sheetsservice.mapper.StockDataSheetRowMapper;
 import pl.tkaczyk.sheetsservice.model.dto.StockDataSheetRow;
@@ -38,9 +39,8 @@ public class GoogleSheetsServiceImpl implements GoogleSheetsService {
             return googleSheetMapper.mapToTickerList(tickersValues);
 
         }catch (IOException e){
-            log.error("Error while reading ticker from Google Sheets", e);
+            throw new GoogleSheetsIntegrationException("Failed to read tickers from Google Sheets", e);
         }
-        return null;
     }
 
     @Override

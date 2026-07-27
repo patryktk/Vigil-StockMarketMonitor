@@ -20,12 +20,12 @@ public class StockEventListener {
 
         switch (eventType) {
             case "StockSnapshotEvent" -> {
-                StockSnapshotEvent event = objectMapper.convertValue(record.value(), StockSnapshotEvent.class);
+                StockSnapshotEvent event = objectMapper.readValue(record.value(), StockSnapshotEvent.class);
                 //Todo: dodać zapis
                 System.out.println("StockSnapshotEvent: " + event.ticker());
             }
             case "DividendEvent" -> {
-                DividendEvent event = objectMapper.convertValue(record.value(), DividendEvent.class);
+                DividendEvent event = objectMapper.readValue(record.value(), DividendEvent.class);
                 //Todo: dodać zapis
             }
             default -> throw new IllegalStateException("Unknown event type: " + eventType);

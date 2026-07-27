@@ -16,7 +16,7 @@ public class SheetsController {
 
     private final GoogleSheetsService googleSheetsService;
 
-    @GetMapping("/read")
+    @GetMapping("/readTickersList")
     public ResponseEntity<List<TickerDto>> readTicker(){
         return ResponseEntity.ok(googleSheetsService.readTicker());
     }
@@ -26,5 +26,6 @@ public class SheetsController {
         googleSheetsService.writeData(payload);
         return ResponseEntity.ok().build();
     }
+
 
 }

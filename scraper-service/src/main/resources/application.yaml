@@ -1,8 +1,6 @@
 server:
   port: 8030
 
-debug: true
-
 spring:
   application:
     name: scraper-service
@@ -20,7 +18,7 @@ spring:
     baseline-on-migrate: false
     validate-on-migrate: true
   kafka:
-    bootstrap-servers: localhost:9092 #kafka:9092
+    bootstrap-servers: localhost:29092 #kafka:9092
 
 resilience4j:
   retry:
@@ -33,6 +31,14 @@ resilience4j:
         exponential-backoff-multiplier: 2
         retry-exceptions: #Defines on which exceptions do retry if defined don't need to define ignore-exceptions
           - pl.tkaczyk.scraperservice.exception.HtmlFetchException
+      sheetsService:
+        max-attempts: 3
+        wait-duration:
+          seconds: 1
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+        retry-exceptions:
+          - feign.FeignException
     retry-aspect-order: 2
   ratelimiter:
     instances:
@@ -52,8 +58,18 @@ resilience4j:
         wait-duration-in-open-state: #how long before it moves to half-open from open
           seconds: 30
         minimum-number-of-calls: 10 #CB starts raiting after 10 calls
+      sheets-service:
+        sliding-window-size: 10
+        permitted-number-of-calls-in-half-open-state: 2
+        failure-rate-threshold: 50
+        wait-duration-in-open-state:
+          seconds: 30
+        minimum-number-of-calls: 5
     circuit-breaker-aspect-order: 3
 
 logging:
   level:
     org.flywaydb: DEBUG
+
+sheets-service:
+  url: localhost:8040
