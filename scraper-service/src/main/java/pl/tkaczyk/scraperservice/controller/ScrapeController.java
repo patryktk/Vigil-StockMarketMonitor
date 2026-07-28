@@ -25,7 +25,7 @@ public class ScrapeController {
 
     @GetMapping("/test")
     public ResponseEntity<String> test() {
-        stockEventPublisher.publishSnapshot(new StockSnapshotEvent("XF"));
+//        stockEventPublisher.publishSnapshot(new StockSnapshotEvent("XF"));
         return ResponseEntity.ok().body("test");
     }
 }

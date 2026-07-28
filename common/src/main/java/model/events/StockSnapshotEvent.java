@@ -1,11 +1,12 @@
 package model.events;
 
+import model.dto.DividendAnnouncementDto;
+import model.dto.StockSnapshotDto;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 
 public record StockSnapshotEvent(
-        String ticker,
-        BigDecimal price,
-        BigDecimal changePercent,
-        Instant scrapedAt
+        DividendAnnouncementDto dividendAnnouncementDto,
+        StockSnapshotDto stockSnapshot
 ) {}
