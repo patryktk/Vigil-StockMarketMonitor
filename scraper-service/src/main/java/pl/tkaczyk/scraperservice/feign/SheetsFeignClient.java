@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
-@FeignClient(name = "sheets-service", url = "${sheets-service.url}")
+@FeignClient(name = "sheets-service")
 public interface SheetsFeignClient {
 
     @GetMapping("/api/sheets/readTickersList")

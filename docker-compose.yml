@@ -21,7 +21,7 @@ services:
       service: network-deploy-service
     restart: unless-stopped
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ptnaza" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME}" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -51,6 +51,12 @@ services:
     extends:
       file: common-config.yml
       service: network-deploy-service
+    healthcheck:
+      test: [ "CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092 || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
@@ -78,7 +84,53 @@ services:
       KAFKA_CLUSTERS_0_NAME: vigil-local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
+  eureka-server:
+    image: eureka-server:latest
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+    depends_on:
+      config-server:
+        condition: service_healthy
+  config-server:
+    image: config-server:latest
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+  sheets-service:
+    image: sheets-service:latest
+    container_name: sheets-service
+    ports:
+      - "8080:8080"
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+    depends_on:
+      config-server:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+  scraper-service:
+    image: scraper-service:latest
+    container_name: scraper-service
+    ports:
+      - "8081:8081"
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+    depends_on:
+      config-server:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
 networks:
   vigil-net:
     driver: bridge
