@@ -1,28 +1,24 @@
 package pl.tkaczyk.scraperservice.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import pl.tkaczyk.scraperservice.config.TestAuditingConfig;
 import pl.tkaczyk.scraperservice.model.dto.CompanyDTO;
 import pl.tkaczyk.scraperservice.service.CompanyService;
-import tools.jackson.databind.ObjectMapper;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = {CompanyController.class})
-@Import(TestAuditingConfig.class)
+@WebMvcTest(
+        controllers = {CompanyController.class}
+)
 class CompanyControllerTest {
 
     @MockitoBean

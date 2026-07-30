@@ -1,24 +1,27 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
-#VERSION="1.0"
+VERSION="${1:-0.1}"
 
-echo "Building api-service..."
-docker build -t api-service:0.1 -f api-service/Dockerfile .
+SERVICES=(
+#    api-service
+    scraper-service
+#    processor-service
+    sheets-service
+    eureka-server
+    config-server
+)
 
-echo "Building scraper-service..."
-docker build -t scraper-service:0.1 -f scraper-service/Dockerfile .
+for service in "${SERVICES[@]}"; do
+(
+    echo "Building $service..."
+    docker build \
+        -t "$service:$VERSION" \
+        -f "$service/Dockerfile" \
+        .
+) &
+done
 
-echo "Building processor-service..."
-docker build -t processor-service:0.1 -f processor-service/Dockerfile .
-
-echo "Building sheets-service..."
-docker build -t sheets-service:0.1 -f sheets-service/Dockerfile .
-
-echo "Building eureka-server..."
-docker build -t eureka-server:0.1 -f eureka-server/Dockerfile .
-
-echo "Building config-service..."
-docker build -t config-server:0.1 -f config-server/Dockerfile .
+wait
 
 echo "All images built successfully."
