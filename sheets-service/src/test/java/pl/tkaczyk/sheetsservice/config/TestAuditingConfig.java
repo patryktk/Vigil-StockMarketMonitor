@@ -1,0 +1,18 @@
+//package pl.tkaczyk.sheetsservice.config;
+//
+//import org.springframework.boot.test.context.TestConfiguration;
+//import org.springframework.context.annotation.Bean;
+//import org.springframework.data.domain.AuditorAware;
+//import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+//
+//import java.util.Optional;
+//
+//@TestConfiguration
+//@EnableJpaAuditing(auditorAwareRef = "auditAwareImpl", modifyOnCreate = false)
+//public class TestAuditingConfig {
+//
+//    @Bean
+//    public AuditorAware<String> auditAwareImpl() {
+//        return () -> Optional.of("user_test");
+//    }
+//}
